@@ -2,11 +2,21 @@ const express = require("express");
 const cors = require("cors");
 const eventsRoutes = require("./routes/eventsRoutes");
 const errorHandler = require("./middlewares/errorHandler");
+const connectDB = require("./config/db");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.get("/api/v1/documentacion", (req, res) => {
   res.status(200).json({
