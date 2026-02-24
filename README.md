@@ -53,7 +53,7 @@ Event {
 ![Diagrama de colecciones](docs/diagrama-colecciones.png)
 
 ## Endpoints de la API
-Base URL: `https://TU_BACKEND.vercel.app`
+Base URL: `https://backend-zeta-ten-49.vercel.app`
 
 | Método | Ruta | Descripción |
 | --- | --- | --- |
@@ -104,12 +104,12 @@ Base URL: `https://TU_BACKEND.vercel.app`
 - **Frontend Angular**: carpeta `frontend-angular/`.
 - **Frontend React**: carpeta `frontend-react/`.
 
-Actualizar las URLs de la API en cada frontend luego del despliegue.
+Las URLs de la API en los frontends ya están apuntando al backend en Vercel.
 
 ## URLs de despliegue (completar)
-- API: `https://TU_BACKEND.vercel.app`
-- Angular: `https://TU_FRONTEND_ANGULAR.vercel.app`
-- React: `https://TU_FRONTEND_REACT.vercel.app`
+- API: `https://backend-zeta-ten-49.vercel.app`
+- Angular: `https://frontend-angular-mu.vercel.app`
+- React: `https://frontend-react-psi-ten.vercel.app`
 
 ## Capturas de pantalla
 | Vista | Angular | React |
@@ -119,6 +119,6 @@ Actualizar las URLs de la API en cada frontend luego del despliegue.
 | Detalle | `docs/capturas/angular-detalle.png` | `docs/capturas/react-detalle.png` |
 
 ## Checklist de entrega
-- [ ] Sustituir URLs de despliegue reales.
+- [x] Sustituir URLs de despliegue reales.
 - [ ] Añadir capturas en `docs/capturas/`.
 - [ ] Añadir imagen del diagrama en `docs/diagrama-colecciones.png`.

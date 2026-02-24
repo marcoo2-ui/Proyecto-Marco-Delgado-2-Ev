@@ -17,7 +17,7 @@ interface EventListResponse {
   providedIn: 'root'
 })
 export class EventsService {
-  private baseUrl = 'http://localhost:4000/api/v1';
+  private baseUrl = 'https://backend-zeta-ten-49.vercel.app/api/v1';
 
   constructor(private http: HttpClient) {}
 
