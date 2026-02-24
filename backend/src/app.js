@@ -18,6 +18,13 @@ app.use(async (req, res, next) => {
   }
 });
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "API de Eventos 360 activa",
+    docs: "/api/v1/documentacion"
+  });
+});
+
 app.get("/api/v1/documentacion", (req, res) => {
   res.status(200).json({
     endpoints: [
