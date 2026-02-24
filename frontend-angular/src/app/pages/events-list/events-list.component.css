@@ -1,0 +1,15 @@
+.table td,
+.table th {
+  vertical-align: middle;
+}
+
+.table thead th {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6c757d;
+}
+
+.card.shadow-sm {
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08) !important;
+}

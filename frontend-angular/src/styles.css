@@ -1,0 +1,43 @@
+body {
+	margin: 0;
+	background-color: #f5f7fb;
+	font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+	color: #1f2937;
+}
+
+.card {
+	border-radius: 0.75rem;
+}
+
+.navbar.bg-primary {
+	background: linear-gradient(120deg, #1d4ed8, #2563eb, #3b82f6) !important;
+}
+
+.badge.text-bg-primary {
+	background: linear-gradient(120deg, #2563eb, #4f46e5) !important;
+}
+
+.btn-primary {
+	border: none;
+	box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+}
+
+.btn-outline-primary {
+	border-color: #2563eb;
+	color: #2563eb;
+}
+
+.btn-outline-primary:hover {
+	background-color: #2563eb;
+	color: #fff;
+}
+
+.table {
+	background-color: #fff;
+	border-radius: 0.75rem;
+	overflow: hidden;
+}
+
+.table-hover tbody tr:hover {
+	background-color: #f0f5ff;
+}

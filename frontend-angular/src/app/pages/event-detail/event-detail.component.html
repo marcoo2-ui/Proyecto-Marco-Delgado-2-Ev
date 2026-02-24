@@ -1,0 +1,41 @@
+<a class="btn btn-link mb-3" routerLink="/eventos">← Volver</a>
+
+<div *ngIf="loading" class="text-center my-4">
+  <div class="spinner-border text-primary" role="status"></div>
+  <div class="mt-2">Cargando evento...</div>
+</div>
+
+<div *ngIf="message" class="alert alert-danger">{{ message }}</div>
+
+<div *ngIf="event" class="card shadow-sm">
+  <div class="card-body">
+    <h2 class="h4 mb-2">{{ event.titulo }}</h2>
+    <p class="text-muted">{{ event.descripcion }}</p>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <strong>Categoría:</strong> {{ event.categoria }}
+      </div>
+      <div class="col-md-6">
+        <strong>Ubicación:</strong> {{ event.ubicacion }}
+      </div>
+      <div class="col-md-6">
+        <strong>Fecha:</strong> {{ event.fecha | date: 'fullDate' }}
+      </div>
+      <div class="col-md-6">
+        <strong>Precio:</strong> {{ event.precio | currency: 'EUR' }}
+      </div>
+      <div class="col-md-6">
+        <strong>Estado:</strong>
+        <span class="badge" [ngClass]="event.esPublico ? 'bg-success' : 'bg-secondary'">
+          {{ event.esPublico ? 'Público' : 'Privado' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="mt-4 d-flex gap-2">
+      <a class="btn btn-outline-secondary" [routerLink]="['/eventos', event._id, 'editar']">Editar</a>
+      <a class="btn btn-primary" routerLink="/eventos">Ver todos</a>
+    </div>
+  </div>
+</div>

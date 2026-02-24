@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold" routerLink="/eventos">Eventos 360</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/eventos">Listado</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/eventos/nuevo">Nuevo evento</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-4">
+  <div class="bg-white border rounded-4 shadow-sm p-4 mb-4">
+    <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-2">
+      <div>
+        <h1 class="h4 fw-bold mb-1">Panel de gestión de eventos</h1>
+        <p class="text-muted mb-0">Controla, filtra y actualiza todos los eventos en un solo lugar.</p>
+      </div>
+      <span class="badge text-bg-primary px-3 py-2">Última actualización en tiempo real</span>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="py-4 border-top bg-white">
+  <div class="container d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+    <span class="text-muted">Eventos 360 · Proyecto Integrador MEAN</span>
+    <span class="text-muted">Angular + React + MongoDB Atlas</span>
+  </div>
+</footer>
