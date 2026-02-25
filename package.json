@@ -1,0 +1,13 @@
+{
+  "name": "proyecto-marco-delgado-2-ev",
+  "private": true,
+  "scripts": {
+    "backend:dev": "npm --prefix backend run dev",
+    "backend:test": "npm --prefix backend test",
+    "backend:seed": "npm --prefix backend run seed",
+    "frontend:angular": "npm --prefix frontend-angular start",
+    "frontend:react": "npm --prefix frontend-react run dev",
+    "build:angular": "npm --prefix frontend-angular run build",
+    "build:react": "npm --prefix frontend-react run build"
+  }
+}

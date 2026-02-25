@@ -1,5 +1,12 @@
 node_modules/
 **/node_modules/
+.vercel/
+**/.vercel/
+dist/
+**/dist/
+.angular/cache/
+.vite/
+coverage/
 .env
 .env.local
 .env.*
