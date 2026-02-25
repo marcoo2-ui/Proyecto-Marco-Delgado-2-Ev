@@ -19,6 +19,7 @@ const EventForm = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
+  const [messageDetails, setMessageDetails] = useState([]);
 
   const isEdit = Boolean(id);
 
@@ -36,6 +37,7 @@ const EventForm = () => {
       } catch (error) {
         setMessage(error.message);
         setMessageType('danger');
+        setMessageDetails(error.errors || []);
       } finally {
         setLoading(false);
       }
@@ -65,6 +67,7 @@ const EventForm = () => {
     } catch (error) {
       setMessage(error.message);
       setMessageType('danger');
+      setMessageDetails(error.errors || []);
     } finally {
       setLoading(false);
     }
@@ -80,7 +83,18 @@ const EventForm = () => {
         <div className="card-body">
           <h2 className="h4 mb-3">{isEdit ? 'Editar evento' : 'Crear evento'}</h2>
 
-          {message && <div className={`alert alert-${messageType}`}>{message}</div>}
+          {message && (
+            <div className={`alert alert-${messageType}`}>
+              <div>{message}</div>
+              {messageDetails.length > 0 && (
+                <ul className="mb-0 mt-2">
+                  {messageDetails.map((detail) => (
+                    <li key={detail}>{detail}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
 
           <form className="row g-3" onSubmit={handleSubmit}>
             <div className="col-md-6">

@@ -4,7 +4,9 @@ const handleResponse = async (response) => {
   if (!response.ok) {
     const errorBody = await response.json().catch(() => ({}));
     const message = errorBody.message || 'Error al comunicar con la API';
-    throw new Error(message);
+    const error = new Error(message);
+    error.errors = errorBody.errors || [];
+    throw error;
   }
   return response.json();
 };
