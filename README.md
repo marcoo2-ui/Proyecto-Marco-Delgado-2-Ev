@@ -52,6 +52,8 @@ Event {
 ## Diagrama de colecciones (imagen)
 ![Diagrama de colecciones](docs/diagrama-colecciones.png)
 
+> Versión SVG disponible: `docs/diagrama-colecciones.svg`
+
 ## Endpoints de la API
 Base URL: `https://backend-zeta-ten-49.vercel.app`
 

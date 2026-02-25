@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520">
+  <style>
+    .box { fill: #f8fafc; stroke: #1e293b; stroke-width: 2; rx: 12; }
+    .title { font: 600 20px 'Segoe UI', sans-serif; fill: #0f172a; }
+    .field { font: 16px 'Segoe UI', sans-serif; fill: #1f2937; }
+    .meta { font: 14px 'Segoe UI', sans-serif; fill: #475569; }
+    .line { stroke: #334155; stroke-width: 2; }
+  </style>
+
+  <rect class="box" x="140" y="70" width="620" height="360" rx="14" />
+  <text class="title" x="180" y="115">Evento (Event)</text>
+
+  <text class="field" x="180" y="155">_id: ObjectId</text>
+  <text class="field" x="180" y="185">titulo: String</text>
+  <text class="field" x="180" y="215">descripcion: String</text>
+  <text class="field" x="180" y="245">categoria: String</text>
+  <text class="field" x="180" y="275">ubicacion: String</text>
+  <text class="field" x="180" y="305">precio: Number</text>
+  <text class="field" x="180" y="335">fecha: Date</text>
+  <text class="field" x="180" y="365">esPublico: Boolean</text>
+
+  <text class="meta" x="180" y="405">createdAt: Date</text>
+  <text class="meta" x="400" y="405">updatedAt: Date</text>
+
+  <line class="line" x1="180" y1="130" x2="720" y2="130" />
+</svg>
