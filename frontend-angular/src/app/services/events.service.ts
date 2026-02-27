@@ -1,6 +1,6 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, timeout } from 'rxjs';
+import { Observable, catchError, from, timeout } from 'rxjs';
 import { EventModel } from '../models/event.model';
 
 interface EventListResponse {
@@ -48,21 +48,50 @@ export class EventsService {
     );
   }
 
+  private async fetchJsonWithFallback<T>(primaryUrl: string, fallbackUrl: string): Promise<T> {
+    const urls = primaryUrl === fallbackUrl ? [primaryUrl] : [primaryUrl, fallbackUrl];
+    let lastError: unknown;
+
+    for (const url of urls) {
+      const controller = new AbortController();
+      const timeoutHandle = setTimeout(() => controller.abort(), 15000);
+
+      try {
+        const response = await fetch(url, { signal: controller.signal });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const json = (await response.json()) as T;
+        clearTimeout(timeoutHandle);
+        return json;
+      } catch (error) {
+        clearTimeout(timeoutHandle);
+        lastError = error;
+      }
+    }
+
+    throw lastError ?? new Error('No se pudo obtener respuesta de la API');
+  }
+
   getEvents(params: { page: number; limit: number; categoria?: string; q?: string }): Observable<EventListResponse> {
-    let httpParams = new HttpParams()
-      .set('page', params.page)
-      .set('limit', params.limit);
+    const searchParams = new URLSearchParams({
+      page: String(params.page),
+      limit: String(params.limit)
+    });
 
     if (params.categoria) {
-      httpParams = httpParams.set('categoria', params.categoria);
+      searchParams.set('categoria', params.categoria);
     }
     if (params.q) {
-      httpParams = httpParams.set('q', params.q);
+      searchParams.set('q', params.q);
     }
 
-    return this.withFallback((baseUrl) =>
-      this.http.get<EventListResponse>(`${baseUrl}/eventos/get/all`, { params: httpParams })
-    );
+    const query = searchParams.toString();
+    const primaryUrl = `${this.baseUrl}/eventos/get/all?${query}`;
+    const fallbackUrl = `${this.fallbackBaseUrl}/eventos/get/all?${query}`;
+
+    return from(this.fetchJsonWithFallback<EventListResponse>(primaryUrl, fallbackUrl));
   }
 
   getEvent(id: string): Observable<{ data: EventModel }> {
