@@ -82,9 +82,15 @@ Base URL: `https://backend-zeta-ten-49.vercel.app`
 
 ### Frontend Angular
 - Consume la API desde `frontend-angular/src/app/services/events.service.ts`.
+- En local usa `http://localhost:4000/api/v1` automáticamente.
+- En despliegue usa `/api/v1` (proxy por `frontend-angular/vercel.json` hacia backend).
+- Opcional: puedes sobreescribir en runtime con `window.__API_BASE_URL__`.
 
 ### Frontend React
 - Consume la API desde `frontend-react/src/api/eventsApi.js`.
+- En local usa `http://localhost:4000/api/v1` automáticamente.
+- En despliegue usa `/api/v1` (proxy por `frontend-react/vercel.json` hacia backend).
+- Opcional: define `VITE_API_BASE_URL` en variables de entorno (ejemplo en `frontend-react/.env.example`).
 
 ## Scripts útiles
 ### Backend

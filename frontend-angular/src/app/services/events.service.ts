@@ -17,9 +17,23 @@ interface EventListResponse {
   providedIn: 'root'
 })
 export class EventsService {
-  private baseUrl = 'https://backend-zeta-ten-49.vercel.app/api/v1';
+  private readonly baseUrl = this.resolveBaseUrl();
 
   constructor(private http: HttpClient) {}
+
+  private resolveBaseUrl(): string {
+    const runtimeBaseUrl = (globalThis as { __API_BASE_URL__?: string }).__API_BASE_URL__;
+    if (runtimeBaseUrl) {
+      return runtimeBaseUrl;
+    }
+
+    const hostname = globalThis.location?.hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return 'http://localhost:4000/api/v1';
+    }
+
+    return '/api/v1';
+  }
 
   getEvents(params: { page: number; limit: number; categoria?: string; q?: string }): Observable<EventListResponse> {
     let httpParams = new HttpParams()

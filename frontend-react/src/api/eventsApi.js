@@ -1,4 +1,12 @@
-const BASE_URL = 'https://backend-zeta-ten-49.vercel.app/api/v1';
+const getDefaultApiBaseUrl = () => {
+  const hostname = window?.location?.hostname;
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return 'http://localhost:4000/api/v1';
+  }
+  return '/api/v1';
+};
+
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || getDefaultApiBaseUrl();
 
 const handleResponse = async (response) => {
   if (!response.ok) {
