@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { EventsService } from '../../services/events.service';
 import { EventModel } from '../../models/event.model';
+import { timeout } from 'rxjs';
 
 @Component({
   selector: 'app-events-list',
@@ -35,6 +36,7 @@ export class EventsListComponent implements OnInit {
     this.loading = true;
     this.eventsService
       .getEvents({ page: this.page, limit: this.limit, categoria: this.categoria || undefined, q: this.search || undefined })
+      .pipe(timeout(15000))
       .subscribe({
         next: (response) => {
           this.events = response.data;

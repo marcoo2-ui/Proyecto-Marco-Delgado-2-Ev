@@ -32,7 +32,7 @@ export class EventsService {
       return 'http://localhost:4000/api/v1';
     }
 
-    return '/api/v1';
+    return 'https://backend-zeta-ten-49.vercel.app/api/v1';
   }
 
   getEvents(params: { page: number; limit: number; categoria?: string; q?: string }): Observable<EventListResponse> {
