@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, catchError, timeout } from 'rxjs';
 import { EventModel } from '../models/event.model';
 
 interface EventListResponse {
@@ -18,6 +18,7 @@ interface EventListResponse {
 })
 export class EventsService {
   private readonly baseUrl = this.resolveBaseUrl();
+  private readonly fallbackBaseUrl = 'https://backend-zeta-ten-49.vercel.app/api/v1';
 
   constructor(private http: HttpClient) {}
 
@@ -35,6 +36,18 @@ export class EventsService {
     return 'https://backend-zeta-ten-49.vercel.app/api/v1';
   }
 
+  private withFallback<T>(request: (baseUrl: string) => Observable<T>): Observable<T> {
+    const primary$ = request(this.baseUrl).pipe(timeout(15000));
+
+    if (this.baseUrl === this.fallbackBaseUrl) {
+      return primary$;
+    }
+
+    return primary$.pipe(
+      catchError(() => request(this.fallbackBaseUrl).pipe(timeout(15000)))
+    );
+  }
+
   getEvents(params: { page: number; limit: number; categoria?: string; q?: string }): Observable<EventListResponse> {
     let httpParams = new HttpParams()
       .set('page', params.page)
@@ -47,22 +60,32 @@ export class EventsService {
       httpParams = httpParams.set('q', params.q);
     }
 
-    return this.http.get<EventListResponse>(`${this.baseUrl}/eventos/get/all`, { params: httpParams });
+    return this.withFallback((baseUrl) =>
+      this.http.get<EventListResponse>(`${baseUrl}/eventos/get/all`, { params: httpParams })
+    );
   }
 
   getEvent(id: string): Observable<{ data: EventModel }> {
-    return this.http.get<{ data: EventModel }>(`${this.baseUrl}/eventos/get/${id}`);
+    return this.withFallback((baseUrl) =>
+      this.http.get<{ data: EventModel }>(`${baseUrl}/eventos/get/${id}`)
+    );
   }
 
   createEvent(payload: EventModel): Observable<{ data: EventModel; message: string }> {
-    return this.http.post<{ data: EventModel; message: string }>(`${this.baseUrl}/eventos/post`, payload);
+    return this.withFallback((baseUrl) =>
+      this.http.post<{ data: EventModel; message: string }>(`${baseUrl}/eventos/post`, payload)
+    );
   }
 
   updateEvent(id: string, payload: EventModel): Observable<{ data: EventModel; message: string }> {
-    return this.http.put<{ data: EventModel; message: string }>(`${this.baseUrl}/eventos/update/${id}`, payload);
+    return this.withFallback((baseUrl) =>
+      this.http.put<{ data: EventModel; message: string }>(`${baseUrl}/eventos/update/${id}`, payload)
+    );
   }
 
   deleteEvent(id: string): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(`${this.baseUrl}/eventos/delete/${id}`);
+    return this.withFallback((baseUrl) =>
+      this.http.delete<{ message: string }>(`${baseUrl}/eventos/delete/${id}`)
+    );
   }
 }

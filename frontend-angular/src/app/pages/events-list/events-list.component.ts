@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { EventsService } from '../../services/events.service';
 import { EventModel } from '../../models/event.model';
-import { timeout } from 'rxjs';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-events-list',
@@ -36,16 +36,14 @@ export class EventsListComponent implements OnInit {
     this.loading = true;
     this.eventsService
       .getEvents({ page: this.page, limit: this.limit, categoria: this.categoria || undefined, q: this.search || undefined })
-      .pipe(timeout(15000))
+      .pipe(finalize(() => (this.loading = false)))
       .subscribe({
         next: (response) => {
-          this.events = response.data;
-          this.total = response.meta.total;
-          this.totalPages = response.meta.totalPages || 1;
-          this.loading = false;
+          this.events = response.data || [];
+          this.total = response.meta?.total ?? this.events.length;
+          this.totalPages = response.meta?.totalPages || 1;
         },
         error: () => {
-          this.loading = false;
           this.message = 'No se pudieron cargar los eventos.';
           this.messageType = 'danger';
         }
