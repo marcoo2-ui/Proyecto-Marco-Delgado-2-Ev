@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { EventsService } from '../../services/events.service';
@@ -27,7 +27,11 @@ export class EventsListComponent implements OnInit {
   search = '';
   categoria = '';
 
-  constructor(private eventsService: EventsService) {}
+  constructor(
+    private eventsService: EventsService,
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadEvents();
@@ -43,14 +47,17 @@ export class EventsListComponent implements OnInit {
   private startLoadingGuard(): void {
     this.clearLoadingGuard();
     this.loadingGuardTimeout = setTimeout(() => {
-      if (!this.loading) {
-        return;
-      }
+      this.ngZone.run(() => {
+        if (!this.loading) {
+          return;
+        }
 
-      this.loading = false;
-      this.message = 'La carga tardó demasiado. Reintentando con conexión alternativa...';
-      this.messageType = 'danger';
-      this.loadEventsDirectFallback();
+        this.loading = false;
+        this.message = 'La carga tardó demasiado. Reintentando con conexión alternativa...';
+        this.messageType = 'danger';
+        this.cdr.detectChanges();
+        this.loadEventsDirectFallback();
+      });
     }, 10000);
   }
 
@@ -75,15 +82,21 @@ export class EventsListComponent implements OnInit {
         return response.json();
       })
       .then((response: { data?: EventModel[]; meta?: { total?: number; totalPages?: number } }) => {
-        this.events = response.data || [];
-        this.total = response.meta?.total ?? this.events.length;
-        this.totalPages = response.meta?.totalPages || 1;
-        this.message = '';
-        this.messageType = '';
+        this.ngZone.run(() => {
+          this.events = response.data || [];
+          this.total = response.meta?.total ?? this.events.length;
+          this.totalPages = response.meta?.totalPages || 1;
+          this.message = '';
+          this.messageType = '';
+          this.cdr.detectChanges();
+        });
       })
       .catch(() => {
-        this.message = 'No se pudieron cargar los eventos.';
-        this.messageType = 'danger';
+        this.ngZone.run(() => {
+          this.message = 'No se pudieron cargar los eventos.';
+          this.messageType = 'danger';
+          this.cdr.detectChanges();
+        });
       });
   }
 
@@ -94,19 +107,28 @@ export class EventsListComponent implements OnInit {
       .getEvents({ page: this.page, limit: this.limit, categoria: this.categoria || undefined, q: this.search || undefined })
       .pipe(
         finalize(() => {
-          this.loading = false;
-          this.clearLoadingGuard();
+          this.ngZone.run(() => {
+            this.loading = false;
+            this.clearLoadingGuard();
+            this.cdr.detectChanges();
+          });
         })
       )
       .subscribe({
         next: (response) => {
-          this.events = response.data || [];
-          this.total = response.meta?.total ?? this.events.length;
-          this.totalPages = response.meta?.totalPages || 1;
+          this.ngZone.run(() => {
+            this.events = response.data || [];
+            this.total = response.meta?.total ?? this.events.length;
+            this.totalPages = response.meta?.totalPages || 1;
+            this.cdr.detectChanges();
+          });
         },
         error: () => {
-          this.message = 'No se pudieron cargar los eventos.';
-          this.messageType = 'danger';
+          this.ngZone.run(() => {
+            this.message = 'No se pudieron cargar los eventos.';
+            this.messageType = 'danger';
+            this.cdr.detectChanges();
+          });
         }
       });
   }
