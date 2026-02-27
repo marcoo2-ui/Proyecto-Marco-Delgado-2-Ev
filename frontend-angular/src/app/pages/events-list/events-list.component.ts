@@ -54,6 +54,11 @@ export class EventsListComponent implements OnInit {
   }
 
   private renderEventsDom(events: EventModel[], total: number, totalPages: number): void {
+    const loadingElement = document.getElementById('loading-events');
+    if (loadingElement) {
+      loadingElement.style.display = 'none';
+    }
+
     const totalElement = document.getElementById('total-events');
     if (totalElement) {
       totalElement.textContent = String(total);
