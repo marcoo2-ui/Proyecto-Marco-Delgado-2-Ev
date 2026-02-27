@@ -44,6 +44,65 @@ export class EventsListComponent implements OnInit {
     }
   }
 
+  private escapeHtml(value: string): string {
+    return value
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;');
+  }
+
+  private renderEventsDom(events: EventModel[], total: number, totalPages: number): void {
+    const totalElement = document.getElementById('total-events');
+    if (totalElement) {
+      totalElement.textContent = String(total);
+    }
+
+    const pagesElement = document.getElementById('total-pages');
+    if (pagesElement) {
+      pagesElement.textContent = String(totalPages);
+    }
+
+    const tbody = document.getElementById('events-tbody');
+    if (!tbody) {
+      return;
+    }
+
+    if (!events.length) {
+      tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No hay eventos disponibles.</td></tr>';
+      return;
+    }
+
+    const rows = events
+      .map((event) => {
+        const id = this.escapeHtml(event._id || '');
+        const titulo = this.escapeHtml(event.titulo || '');
+        const categoria = this.escapeHtml(event.categoria || '');
+        const fecha = event.fecha ? new Date(event.fecha).toLocaleDateString('es-ES') : '-';
+        const precio = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(event.precio || 0);
+        const estadoClass = event.esPublico ? 'bg-success' : 'bg-secondary';
+        const estadoText = event.esPublico ? 'Público' : 'Privado';
+
+        return `
+          <tr>
+            <td>${titulo}</td>
+            <td>${categoria}</td>
+            <td>${fecha}</td>
+            <td>${precio}</td>
+            <td><span class="badge ${estadoClass}">${estadoText}</span></td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-primary me-2" href="/eventos/${id}">Ver</a>
+              <a class="btn btn-sm btn-outline-secondary me-2" href="/eventos/${id}/editar">Editar</a>
+            </td>
+          </tr>
+        `;
+      })
+      .join('');
+
+    tbody.innerHTML = rows;
+  }
+
   private startLoadingGuard(): void {
     this.clearLoadingGuard();
     this.loadingGuardTimeout = setTimeout(() => {
@@ -88,6 +147,7 @@ export class EventsListComponent implements OnInit {
           this.totalPages = response.meta?.totalPages || 1;
           this.message = '';
           this.messageType = '';
+          this.renderEventsDom(this.events, this.total, this.totalPages);
           this.cdr.detectChanges();
         });
       })
@@ -120,6 +180,7 @@ export class EventsListComponent implements OnInit {
             this.events = response.data || [];
             this.total = response.meta?.total ?? this.events.length;
             this.totalPages = response.meta?.totalPages || 1;
+            this.renderEventsDom(this.events, this.total, this.totalPages);
             this.cdr.detectChanges();
           });
         },
